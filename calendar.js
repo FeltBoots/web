@@ -66,7 +66,6 @@
       self.clearSelectedCell();
       self.generateDays();
       var d = self.currentDate;
-      var tmp = new Date(d.getFullYear(), d.getMonth(), 0);
       var id;
       var elements = this.table.getElementsByTagName('td');
       for (var e of elements) {
@@ -153,7 +152,6 @@
       this.currentMonth.innerHTML = months[this.currentDate.getMonth()] + ' ' +
         this.currentDate.getFullYear();
       this.table.lastChild.style.display = !lastRow ? 'none' : 'table-row';
-      // this.changeInput();
     }
 
     daysInMonth () {
