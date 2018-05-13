@@ -40,7 +40,7 @@
           tableCol.addEventListener('click', function() {
               if (this.innerHTML != ' ') {
                 self.clearSelectedCell();
-                self.currentDate.setDate(parseInt(this.innerHTML) + 1);
+                self.currentDate.setDate(parseInt(this.innerHTML));
                 self.selectedCell = this;
                 this.classList.add('selectedCell');
                 self.changeInput();
@@ -51,7 +51,8 @@
     }
 
     changeInput() {
-      this.input.value = this.currentDate.toJSON().slice(0,10).replace(/-/g,'/');
+      var d = this.currentDate;
+      this.input.value = d.getFullYear()  + "/" + (d.getMonth() + 1) + "/" + d.getDate();
     }
 
     clearSelectedCell() {
@@ -69,7 +70,7 @@
       var id;
       var elements = this.table.getElementsByTagName('td');
       for (var e of elements) {
-        if (e.innerHTML == self.currentDate.getDate() )
+        if (e.innerHTML == d.getDate())
           id = e.id;
       }
       self.selectedCell = document.getElementById(id);
@@ -88,7 +89,7 @@
       var self = this;
       this.input = document.createElement('input');
       this.container.appendChild(this.input);
-      this.input.value = this.currentDate.toJSON().slice(0,10).replace(/-/g,'/');
+      this.changeInput();
       this.input.addEventListener('change', function () {
         var value = this.value;
         var newDate = new Date(this.value);
