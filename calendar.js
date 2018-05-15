@@ -29,16 +29,19 @@
         daysRow.appendChild(tableCol);
       }
 
+      this.tableCells = [];
       for (var i = 0; i < 6; i++) {
+        this.tableCells[i] = [];
         let tableRow = document.createElement('tr');
         this.table.appendChild(tableRow);
         for (var j = 0; j < 7; j++) {
           let tableCol = document.createElement('td');
           tableCol.id = 'calendar_' + this.counter + '_id_' + (i * 7 + j);
           tableRow.appendChild(tableCol);
+          this.tableCells[i][j] = tableCol;
           var self = this;
           tableCol.addEventListener('click', function() {
-              if (this.innerHTML != ' ') {
+              if (this.innerHTML != '') {
                 self.clearSelectedCell();
                 self.currentDate.setDate(parseInt(this.innerHTML));
                 self.selectedCell = this;
@@ -136,9 +139,9 @@
 
       for (var i = 0; i < 6; i++) {
         for (var j = 0; j < 7; j++) {
-          var tableCol = document.getElementById('calendar_' + this.counter + '_id_' + (i * 7 + j));
+          var tableCol = this.tableCells[i][j];
           if ((i === 0 && j < firstDay) || day > days) {
-            tableCol.innerHTML = ' ';
+            tableCol.innerHTML = '';
           }
           else {
             if (i == 5) lastRow = true;
