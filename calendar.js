@@ -65,12 +65,11 @@
       var self = this;
       self.clearSelectedCell();
       self.generateDays();
-      var d = self.currentDate;
-      var id;
-      var elements = this.table.getElementsByTagName('td');
+      var d = self.currentDate;;
+      var elements = self.table.getElementsByTagName('td');
       for (var e of elements) {
-        if (e.innerHTML == d.getDate())
-          id = e.id;
+        if (e.innerText == d.getDate())
+          var id = e.id;
       }
       self.selectedCell = document.getElementById(id);
       self.selectedCell.classList.add('selectedCell');
