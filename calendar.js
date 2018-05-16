@@ -9,11 +9,13 @@
 
     constructor(container) {
       this.container = container;
+      this.selectedDate = new Date();
       this.currentDate = new Date();
       this.counter = counter++;
       this.generateHeader();
       this.generateTable();
       this.generateDays();
+      this.selectCellCurrent();
     }
 
     generateTable() {
@@ -42,11 +44,9 @@
           var self = this;
           tableCol.addEventListener('click', function() {
               if (this.innerHTML != '') {
-                self.clearSelectedCell();
-                self.currentDate.setDate(parseInt(this.innerHTML));
-                self.selectedCell = this;
-                this.classList.add('selectedCell');
-                self.changeInput();
+                self.setTwoDates(self.selectedDate, self.currentDate);
+                self.selectedDate.setDate(parseInt(this.innerHTML));
+                self.selectCellCurrent();
               }
           });
         }
@@ -54,7 +54,7 @@
     }
 
     changeInput() {
-      var d = this.currentDate;
+      var d = this.selectedDate;
       this.input.value = d.getFullYear()  + "/" + (d.getMonth() + 1) + "/" + d.getDate();
     }
 
@@ -67,12 +67,18 @@
     selectCellCurrent() {
       var self = this;
       self.clearSelectedCell();
-      self.generateDays();
-      var d = self.currentDate;;
+      var selectedD = self.selectedDate;
+      var currendD = self.currentDate;
+      if (currendD.getMonth() != selectedD.getMonth()
+          || currendD.getYear() != selectedD.getYear()) {
+        return;
+      }
+      self.changeInput();
       var elements = self.table.getElementsByTagName('td');
       for (var e of elements) {
-        if (e.innerText == d.getDate())
+        if (e.innerText == selectedD.getDate()) {
           var id = e.id;
+        }
       }
       self.selectedCell = document.getElementById(id);
       self.selectedCell.classList.add('selectedCell');
@@ -82,8 +88,13 @@
       var self = this;
       self.currentDate.setMonth(self.currentDate.getMonth() + num);
       self.generateDays();
-      self.clearSelectedCell();
-      self.changeInput();
+      self.selectCellCurrent();
+    }
+
+    setTwoDates(from, to) {
+      from.setDate(to.getDate());
+      from.setYear(to.getFullYear());
+      from.setMonth(to.getMonth());
     }
 
     generateHeader() {
@@ -95,7 +106,9 @@
         var value = this.value;
         var newDate = new Date(this.value);
         if (!isNaN(newDate.getTime())) {
-          self.currentDate = newDate;
+          self.setTwoDates(self.selectedDate, newDate);
+          self.setTwoDates(self.currentDate, newDate);
+          self.generateDays();
           self.selectCellCurrent();
         }
       });
