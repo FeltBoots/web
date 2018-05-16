@@ -42,6 +42,8 @@
           tableRow.appendChild(tableCol);
           this.tableCells[i][j] = tableCol;
           var self = this;
+          if (j == 0 || j == 6)
+            tableCol.style.color = '#cc2424';
           tableCol.addEventListener('click', function() {
               if (this.innerHTML != '') {
                 self.setTwoDates(self.selectedDate, self.currentDate);
@@ -105,7 +107,7 @@
       this.input.addEventListener('change', function () {
         var value = this.value;
         var newDate = new Date(this.value);
-        if (!isNaN(newDate.getTime())) {
+        if (!isNaN(newDate.getTime()) && value.split('/')[2] == newDate.getDate()) {
           self.setTwoDates(self.selectedDate, newDate);
           self.setTwoDates(self.currentDate, newDate);
           self.generateDays();
@@ -158,8 +160,6 @@
           }
           else {
             if (i == 5) lastRow = true;
-            if (j == 0 || j == 6)
-              tableCol.style.color = '#cc2424';
             tableCol.innerHTML = day++;
           }
         }
