@@ -46,7 +46,7 @@
             tableCol.style.color = '#cc2424';
           tableCol.addEventListener('click', function() {
               if (this.innerHTML != '') {
-                self.setTwoDates(self.selectedDate, self.currentDate);
+                self.selectedDate = new Date(self.currentDate);
                 self.selectedDate.setDate(parseInt(this.innerHTML));
                 self.selectCellCurrent();
               }
@@ -93,12 +93,6 @@
       self.selectCellCurrent();
     }
 
-    setTwoDates(from, to) {
-      from.setDate(to.getDate());
-      from.setYear(to.getFullYear());
-      from.setMonth(to.getMonth());
-    }
-
     generateHeader() {
       var self = this;
       this.input = document.createElement('input');
@@ -108,8 +102,8 @@
         var value = this.value;
         var newDate = new Date(this.value);
         if (!isNaN(newDate.getTime()) && value.split('/')[2] == newDate.getDate()) {
-          self.setTwoDates(self.selectedDate, newDate);
-          self.setTwoDates(self.currentDate, newDate);
+          self.selectedDate = new Date(newDate);
+          self.currentDate = new Date(newDate);;
           self.generateDays();
           self.selectCellCurrent();
         }
