@@ -1,6 +1,6 @@
 'use strict';
 (function() {
-  var counter = 0;
+  let counter = 0;
   const months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -25,25 +25,32 @@
       let daysRow = document.createElement('tr');
       this.table.appendChild(daysRow);
 
-      for (var i = 0; i < 7; i++) {
+      for (let i = 0; i < 7; i++) {
         let tableCol = document.createElement('th');
         tableCol.appendChild(document.createTextNode(days[i]));
         daysRow.appendChild(tableCol);
       }
 
       this.tableCells = [];
-      for (var i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         this.tableCells[i] = [];
         let tableRow = document.createElement('tr');
         this.table.appendChild(tableRow);
-        for (var j = 0; j < 7; j++) {
+        for (let j = 0; j < 7; j++) {
           let tableCol = document.createElement('td');
           tableCol.id = 'calendar_' + this.counter + '_id_' + (i * 7 + j);
           tableRow.appendChild(tableCol);
           this.tableCells[i][j] = tableCol;
-          var self = this;
+          let self = this;
           if (j == 0 || j == 6)
             tableCol.style.color = '#cc2424';
+          if (i * 7 + j == this.currentDate.getDate() + 1) {
+            this.todayCell = {
+              id : this.tableCells[i][j].id,
+              m : this.currentDate.getMonth(),
+              y : this.currentDate.getFullYear(),
+            }
+          }
           tableCol.addEventListener('click', function() {
               if (this.innerHTML != '') {
                 self.selectedDate = new Date(self.currentDate);
@@ -56,7 +63,7 @@
     }
 
     changeInput() {
-      var d = this.selectedDate;
+      let d = this.selectedDate;
       this.input.value = d.getFullYear()  + "/" + (d.getMonth() + 1) + "/" + d.getDate();
     }
 
@@ -67,19 +74,20 @@
     }
 
     selectCellCurrent() {
-      var self = this;
+      let self = this;
       self.clearSelectedCell();
-      var selectedD = self.selectedDate;
-      var currendD = self.currentDate;
+      let selectedD = self.selectedDate;
+      let currendD = self.currentDate;
       if (currendD.getMonth() != selectedD.getMonth()
           || currendD.getYear() != selectedD.getYear()) {
         return;
       }
       self.changeInput();
-      var elements = self.table.getElementsByTagName('td');
-      for (var e of elements) {
+      let elements = self.table.getElementsByTagName('td');
+      let id;
+      for (let e of elements) {
         if (e.innerText == selectedD.getDate()) {
-          var id = e.id;
+          id = e.id;
         }
       }
       self.selectedCell = document.getElementById(id);
@@ -87,20 +95,20 @@
     }
 
     buttonEvent(num) {
-      var self = this;
+      let self = this;
       self.currentDate.setMonth(self.currentDate.getMonth() + num);
       self.generateDays();
       self.selectCellCurrent();
     }
 
     generateHeader() {
-      var self = this;
+      let self = this;
       this.input = document.createElement('input');
       this.container.appendChild(this.input);
       this.changeInput();
       this.input.addEventListener('change', function () {
-        var value = this.value;
-        var newDate = new Date(this.value);
+        let value = this.value;
+        let newDate = new Date(this.value);
         if (!isNaN(newDate.getTime()) && value.split('/')[2] == newDate.getDate()) {
           self.selectedDate = new Date(newDate);
           self.currentDate = new Date(newDate);;
@@ -109,17 +117,17 @@
         }
       });
 
-      var bar = document.createElement('div');
+      let bar = document.createElement('div');
       this.container.appendChild(bar);
       bar.classList.add('bar');
 
-      var leftButton = document.createElement('button');
+      let leftButton = document.createElement('button');
 
       leftButton.addEventListener('click', function() {
         self.buttonEvent(-1);
       });
 
-      var rightButton = document.createElement('button');
+      let rightButton = document.createElement('button');
 
       rightButton.addEventListener('click', function(){
         self.buttonEvent(1);
@@ -136,42 +144,47 @@
     }
 
     generateDays() {
-      var firstDay = ((new Date(this.currentDate.getFullYear(),
-       this.currentDate.getMonth(), 1)).getDay());
+      let firstDay = (new Date(this.currentDate.getFullYear(),
+       this.currentDate.getMonth(), 1)).getDay();
 
-      var lastDay = ((new Date(this.currentDate.getFullYear(),
-       this.currentDate.getMonth() + 1, 0)).getDay());
+      let lastDay = (new Date(this.currentDate.getFullYear(),
+       this.currentDate.getMonth() + 1, 0)).getDay();
 
-      var lastRow = false;
-      var day = 1;
-      var days = this.daysInMonth();
+      let lastRow = false;
+      let day = 1;
+      let days = this.daysInMonth();
+      let d = this.currentDate;
 
-      for (var i = 0; i < 6; i++) {
-        for (var j = 0; j < 7; j++) {
-          var tableCol = this.tableCells[i][j];
+      for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 7; j++) {
+          let tableCol = this.tableCells[i][j];
           if ((i === 0 && j < firstDay) || day > days) {
             tableCol.innerHTML = '';
           }
           else {
+            let t = this.todayCell;
+            let c = this.tableCells[i][j];
+            t.id == c.id && t.m == d.getMonth() && t.y == d.getFullYear() ?
+              c.classList.add('todayCell') : c.classList.remove('todayCell');
             if (i == 5) lastRow = true;
             tableCol.innerHTML = day++;
           }
         }
       }
-      this.currentMonth.innerHTML = months[this.currentDate.getMonth()] + ' ' +
-        this.currentDate.getFullYear();
+      this.currentMonth.innerHTML = months[d.getMonth()] + ' ' +
+        d.getFullYear();
       this.table.lastChild.style.display = !lastRow ? 'none' : 'table-row';
     }
 
     daysInMonth () {
-      var date = this.currentDate;
+      let date = this.currentDate;
       return new Date(date.getYear(), date.getMonth() + 1, 0).getDate();
     }
 
   }
 
   window.onload = function() {
-    var calendars = document.getElementsByClassName('calendar');
+    let calendars = document.getElementsByClassName('calendar');
     for (let index of calendars) {
       new Calendar(index);
     }
