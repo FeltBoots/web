@@ -1,5 +1,4 @@
 .calendar {
-  border: 1px solid black;
   max-width: 290px;
   max-height: 350px;
   margin: 30px;
@@ -15,19 +14,11 @@
   padding: 10px;
 }
 
-.calendar input {
-  margin-bottom: 5px;
-  max-width: 100px;
-}
-
 .calendar table td:hover {
   background-color: #c6dcff;
   cursor:pointer;
 }
 
-.calendar input {
-  cursor:pointer;
-}
 
 body {
   font-family: 'Abril Fatface', cursive;
@@ -64,4 +55,27 @@ body {
 
 .todayCell {
   border: 1px solid #c6dcff;
+}
+
+.dataContainer {
+  border: 1px solid black;
+  display: none;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 2px;
+}
+
+.inputContainer input {
+  max-width: 100px;
+  border: 1px solid black;
+  padding: 2px;
+  cursor:pointer;
+}
+
+.inputContainer > button {
+  border: 1px solid black;
+  border-left: none;
 }

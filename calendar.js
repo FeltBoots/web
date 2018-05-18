@@ -7,8 +7,8 @@
 
   class Calendar {
 
-    constructor(container) {
-      this.container = container;
+    constructor(calendar) {
+      this.calendar = calendar;
       this.selectedDate = new Date();
       this.currentDate = new Date();
       this.counter = counter++;
@@ -20,7 +20,7 @@
 
     generateTable() {
       this.table = document.createElement('table');
-      this.container.appendChild(this.table);
+      this.dataContainer.appendChild(this.table);
 
       let daysRow = document.createElement('tr');
       this.table.appendChild(daysRow);
@@ -103,8 +103,13 @@
 
     generateHeader() {
       let self = this;
+
+      let inputContainer = document.createElement('div');
+      inputContainer.classList.add('inputContainer');
+      this.calendar.appendChild(inputContainer);
+
       this.input = document.createElement('input');
-      this.container.appendChild(this.input);
+      inputContainer.appendChild(this.input);
       this.changeInput();
       this.input.addEventListener('change', function () {
         let value = this.value;
@@ -117,8 +122,20 @@
         }
       });
 
+      let showCalendarButton = document.createElement('button');
+      showCalendarButton.innerHTML = '<img src="images/index.png" />';
+      let c = 0;
+      showCalendarButton.addEventListener('click', function() {
+        self.dataContainer.style.display = c++ % 2 == 0 ? 'block' : 'none';
+      });
+      inputContainer.appendChild(showCalendarButton);
+
+      this.dataContainer = document.createElement('div');
+      this.calendar.appendChild(this.dataContainer);
+      this.dataContainer.classList.add('dataContainer');
+
       let bar = document.createElement('div');
-      this.container.appendChild(bar);
+      this.dataContainer.appendChild(bar);
       bar.classList.add('bar');
 
       let leftButton = document.createElement('button');
